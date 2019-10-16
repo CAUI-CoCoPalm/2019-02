@@ -28,9 +28,8 @@
             android:layout_width="@dimen/thumbnail"
             android:layout_height="@dimen/thumbnail"
             android:layout_centerInParent="true"
-            android:layout_centerHorizontal="true"
             android:layout_marginBottom="60dp"
-            tools:srcCompat="@mipmap/nam" />
+            tools:srcCompat="@drawable/nam" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -45,7 +44,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/Play"
-            android:background="@mipmap/prev"
+            android:background="@drawable/prev"
             android:text="" />
 
         <Button
@@ -55,7 +54,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="35dp"
             android:layout_marginRight="35dp"
-            android:background="@mipmap/pause"
+            android:background="@drawable/play"
             android:text="" />
 
         <Button
@@ -64,7 +63,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/Play"
-            android:background="@mipmap/next"
+            android:background="@drawable/next"
             android:text="" />
     </RelativeLayout>
 </RelativeLayout>
