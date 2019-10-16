@@ -2,6 +2,8 @@ package com.example.mymp3;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -95,6 +97,21 @@ public class MainActivity extends AppCompatActivity {
                 update();
             }
         });
+
+        // test 용
+        title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                volUp();
+            }
+        });
+
+        thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                volDown();
+            }
+        });
     }
 
     private void update() {
@@ -106,6 +123,24 @@ public class MainActivity extends AppCompatActivity {
 
         title.setText(songTitle[songIdx]);
         thumbnail.setBackground(getResources().getDrawable(songThumbnail[songIdx]));
+    }
+
+    private void volUp(){
+        AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        int volume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        if(volume > 0) {
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, volume-1, AudioManager.FLAG_PLAY_SOUND);
+        }
+    }
+
+    private void volDown(){
+        AudioManager am = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        int volume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+
+        if(volume < 15) {
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, volume+1, AudioManager.FLAG_PLAY_SOUND);
+        }
     }
 
     @Override

@@ -18,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="110dp"
+            android:clickable="true"
             android:gravity="center"
             android:text="남이 될 수 있을까"
             android:textColor="#FFFFFF"
@@ -29,6 +30,7 @@
             android:layout_height="@dimen/thumbnail"
             android:layout_centerInParent="true"
             android:layout_marginBottom="60dp"
+            android:clickable="true"
             tools:srcCompat="@drawable/nam" />
     </RelativeLayout>
 
