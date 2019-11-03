@@ -84,12 +84,14 @@ if __name__ == '__main__':
     result_path = './up2down/'
 
     cnt = len(os.listdir(result_path))
-    
+   
+    print ("current data in", str(result_path), ": ", cnt)
+
     while True:
 
         c = input("input s or else: ")
 
-        if(c == 's'):
+        if('s' == c):
             f = open(result_path +str(cnt)+'.txt',"w+")
             total = 0
 
