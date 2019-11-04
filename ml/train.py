@@ -1,6 +1,8 @@
 import smbus			#import SMBus module of I2C
 from time import sleep          #import
 from datetime import datetime
+import argparse
+import pickle
 import os
 
 #some MPU6050 Registers and their Address
@@ -16,6 +18,9 @@ GYRO_XOUT_H  = 0x43
 GYRO_YOUT_H  = 0x45
 GYRO_ZOUT_H  = 0x47
 
+bus = smbus.SMBus(1)
+# or bus = smbus.SMBus(0) for older version boards
+Device_Address = 0x68   # MPU6050 device address
 
 def MPU_Init():
 	#write to sample rate register
@@ -47,11 +52,6 @@ def read_raw_data(addr):
         return value
 
 
-bus = smbus.SMBus(1) 	# or bus = smbus.SMBus(0) for older version boards
-Device_Address = 0x68   # MPU6050 device address
-
-MPU_Init()
-
 def record():
 	
 	#Read Accelerometer raw value
@@ -73,15 +73,43 @@ def record():
         Gy = gyro_y/131.0
         Gz = gyro_z/131.0
 
-        record = str(round(Gx,4)) + "," + str(round(Gy,4)) + ',' + str(round(Gz,4)) + ',' + str(round(Ax,4)) + ',' + str(round(Ay,4)) + ',' + str(round(Az, 4)) + "\n"
+        record = [str(round(Gx,4)),  str(round(Gy,4)), str(round(Gz,4)),  str(round(Ax,4)), str(round(Ay,4)), str(round(Az, 4))]
 
         print (record)
         sleep(0.05)
         return record
 
-if __name__ == '__main__':
+def get_motion_name():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', type=int,help="0: up2down, 1: right2left, 2: left2right, 3: cright2left, 4: cleft2right", choices=[0,1,2,3,4], metavar='Motion_id', required=True) 
+    
+    args = parser.parse_args()
 
-    result_path = './up2down/'
+    m_id = args.i
+    max_record = 34
+    motion = ""
+
+    if m_id == 0:
+        max_recod = 17
+        motion = 'up2down'
+    elif m_id == 1:
+        motion = 'right2left'
+    elif m_id == 2:
+        motion = 'left2right'
+    elif m_id == 3:
+        motion = 'cright2left'
+    elif m_id == 4:
+        motion = 'cleft2right'
+
+    return motion, max_record
+    
+if __name__ == '__main__':
+    MPU_Init()
+    print ("Initalized GPIO!")
+    print ()
+    
+    motion, max_record = get_motion_name()
+    result_path = './dataset/' + motion + '/'
 
     cnt = len(os.listdir(result_path))
    
@@ -92,13 +120,17 @@ if __name__ == '__main__':
         c = input("input s or else: ")
 
         if('s' == c):
-            f = open(result_path +str(cnt)+'.txt',"w+")
+            bundle = []
             total = 0
 
             while total < 17:
                 line = record()
-                f.write(line)
+                bundle.append(line)
                 total += 1
+
+            f_name = result_path + str(cnt) + '.txt'
+            with open(f_name, 'wb') as f:
+                pickle.dump(bundle, f)
 
         else:
             break
