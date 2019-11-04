@@ -102,6 +102,10 @@ def get_motion_name():
         motion = 'cleft2right'
 
     return motion, max_record
+
+def isExistDir(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     
 if __name__ == '__main__':
     MPU_Init()
@@ -110,6 +114,7 @@ if __name__ == '__main__':
     
     motion, max_record = get_motion_name()
     result_path = './dataset/' + motion + '/'
+    isExistDir(result_path)
 
     cnt = len(os.listdir(result_path))
    
