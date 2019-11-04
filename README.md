@@ -15,11 +15,11 @@
 ### 3) 사용법
 1. s 를 입력하면 1¬2초 간 저장한다.
 
-### 3) Up to Down
+### 4) Up to Down
 
 * save 17 lines for 1 action. (1 sec)
 
 
-### 2. Else
+### 5) Else
 
 * save 34 lines for 1 action. (2 sec)
