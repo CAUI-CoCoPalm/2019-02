@@ -1,14 +1,17 @@
+# numpy ver...
+
 import numpy as np
 import os
 import pickle
+import argparse
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 
 UP2DOWN = 0
 RIGHT2LEFT = 1
 LEFT2RIGHT = 2
-CRIGHT2LEFT = 3
-CLEFT2RIGHT = 4
+CLOCKWISE = 3
+RCLOCKWISE = 4
 
 def get_directory(dataset_dir):
     directory = []
@@ -27,7 +30,6 @@ def make_data(dataset_dir='./dataset/'):
     print (len(motions), "motions found!")
 
     for motion in motions:
-        print ()
         motion_data, motion_label = load_dataset(motion)
         #data = np.append(data, motion_data, axis=0)
         #label = np.append(label, motion_label, axis=0)
@@ -65,9 +67,9 @@ def load_dataset(path_dir):
             label.append(RIGHT2LEFT)
         elif motion == 'left2right':
             label.append(LEFT2RIGHT)
-        elif motion == 'cleft2right':
+        elif motion == 'clockwise':
             label.append(CLEFT2RIGHT)
-        elif motion == 'cright2left':
+        elif motion == 'rClockwise':
             label.append(CRIGHT2LEFT)
         
     print ("Found", err_cnt, "Errors!")
