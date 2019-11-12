@@ -112,7 +112,7 @@ def isExistDir(directory):
 
 def isAllZero(line):
     for element in line:
-        if float(element) != '0.0':
+        if float(element) != 0.0:
             return False
 
     return True
