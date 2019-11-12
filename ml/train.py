@@ -142,8 +142,10 @@ if __name__ == '__main__':
                 with open(f_name, 'wb') as f:
                     pickle.dump(bundle, f)
                 isFileOpen = False
+                print (f_name + "saved!!")
+                print ()
 
-            if('r' == c):
+            elif('r' == c):
                 cnt = len(os.listdir(result_path))
                 print ("Current data in", str(result_path), ": ", cnt)
 
@@ -152,12 +154,11 @@ if __name__ == '__main__':
 
             cnt += 1
 
-    except:
-        print ()
-        print ("Error!")
+    except Exception as e:
+        print (e)
 
-    finally:
         if isFileOpen:
             cnt = len(os.listdir(result_path))
             cnt -= 1
-            remove(result_path + str(cnt) + '.txt'
+            print (str(cnt) , ".txt removed!")
+            remove(result_path + str(cnt)) + '.txt'
