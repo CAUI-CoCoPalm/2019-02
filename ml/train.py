@@ -84,16 +84,14 @@ def record():
 
 def get_motion_name():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', type=int,help="0: up2down, 1: right2left, 2: left2right, 3: clockwise, 4: rClockwise", choices=[0,1,2,3,4], metavar='Motion_id', required=True) 
+    parser.add_argument('-i', type=int,help="0: up2down, 1: right2left, 2: left2right, 3: clockwise, 4: cClockwise", choices=[0,1,2,3,4], metavar='Motion_id', required=True) 
     
     args = parser.parse_args()
 
     m_id = args.i
-    max_record = 34
     motion = ""
 
     if m_id == 0:
-        max_recod = 17
         motion = 'up2down'
     elif m_id == 1:
         motion = 'right2left'
@@ -102,9 +100,9 @@ def get_motion_name():
     elif m_id == 3:
         motion = 'clockwise'
     elif m_id == 4:
-        motion = 'rClockwise'
+        motion = 'cClockwise'
 
-    return motion, max_record
+    return motion
 
 def isExistDir(directory):
     if not os.path.exists(directory):
@@ -120,7 +118,7 @@ def isAllZero(line):
 if __name__ == '__main__':
     MPU_Init()
     
-    motion, max_record = get_motion_name()
+    motion = get_motion_name()
     result_path = './dataset/' + motion + '/'
     isExistDir(result_path)
     isFileOpen = False
@@ -137,23 +135,27 @@ if __name__ == '__main__':
             if('s' == c):
                 bundle = []
                 total = 0
+                isError = False
 
                 while total < 17:
                     line = record()
                     if isAllZero(line):
                         print ("Line Error! Ignored!")
-                        continue
+                        isError = True
+                        break
                     bundle.append(line)
                     total += 1
 
                 f_name = result_path + str(cnt) + '.txt'
 
-                isFileOpen = True
-                with open(f_name, 'wb') as f:
-                    pickle.dump(bundle, f)
-                isFileOpen = False
-                print (f_name + " saved!!")
-                print ()
+                if not isError:
+                    isFileOpen = True
+                    with open(f_name, 'wb') as f:
+                        pickle.dump(bundle, f)
+                    isFileOpen = False
+                    print (f_name + " saved!!")
+                    print ()
+                
 
             elif('r' == c):
                 cnt = len(os.listdir(result_path))
