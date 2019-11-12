@@ -109,6 +109,13 @@ def get_motion_name():
 def isExistDir(directory):
     if not os.path.exists(directory):
         os.makedirs(directory)
+
+def isAllZero(line):
+    for element in line:
+        if float(element) != '0.0':
+            return False
+
+    return True
     
 if __name__ == '__main__':
     MPU_Init()
@@ -133,6 +140,9 @@ if __name__ == '__main__':
 
                 while total < 17:
                     line = record()
+                    if isAllZero(line):
+                        print ("Line Error! Ignored!")
+                        continue
                     bundle.append(line)
                     total += 1
 
@@ -142,7 +152,7 @@ if __name__ == '__main__':
                 with open(f_name, 'wb') as f:
                     pickle.dump(bundle, f)
                 isFileOpen = False
-                print (f_name + "saved!!")
+                print (f_name + " saved!!")
                 print ()
 
             elif('r' == c):
