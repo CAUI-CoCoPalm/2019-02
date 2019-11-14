@@ -11,7 +11,7 @@ UP2DOWN = 0
 RIGHT2LEFT = 1
 LEFT2RIGHT = 2
 CLOCKWISE = 3
-RCLOCKWISE = 4
+CCLOCKWISE = 4
 
 def get_directory(dataset_dir):
     directory = []
@@ -30,21 +30,15 @@ def make_data(dataset_dir='./dataset/'):
     print (len(motions), "motions found!")
 
     for motion in motions:
-        motion_data, motion_label = load_dataset(motion)
-        #data = np.append(data, motion_data, axis=0)
-        #label = np.append(label, motion_label, axis=0)
+        motion_data, motion_label = load_data(motion)
 
     return data, label
 
-def load_dataset(path_dir):
+def load_data(path_dir):
     motion = path_dir.split('/')[-2]
-    data_shape = (34, 6)
 
-    if motion == 'up2down':
-        data_shape = (17, 6)
-
-    data = np.empty((6, 0), float)
-    label = []
+    label = list()
+    data = list()
     err_cnt = 0
 
     file_list = os.listdir(path_dir)
@@ -52,14 +46,17 @@ def load_dataset(path_dir):
 
     for one_file in file_list:
         file_path = path_dir + one_file
-        one_motion = np.load(file_path)
+        one_motion = list()
 
-        if one_motion.shape != data_shape:
-            err_cnt += 1
-            print ("Shape Error:", one_file, ":", one_motion.shape)
-            continue
+        with open(file_path, 'rb') as f:
+            one_motion = pickle.load(f)
+
+        #if one_motion.shape != data_shape:
+        #    err_cnt += 1
+        #    print ("Shape Error:", one_file, ":", one_motion.shape)
+        #    continue
         
-        data = np.append(data, one_motion.transpose(), axis=1)
+        data = append(one_motion)
         
         if motion == 'up2down':
             label.append(UP2DOWN)
