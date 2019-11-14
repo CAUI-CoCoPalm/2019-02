@@ -100,6 +100,7 @@ def inference(X_test, y_test, models):
         predictions.append(prediction)
     predictions = np.mean(predictions, axis=0)
     predictions = np.argmax(predictions, axis=1)
+
     print("Accuracy: {}".format(accuracy_score(predictions, y_test)))
 
 if __name__ == '__main__':
