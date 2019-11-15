@@ -81,7 +81,6 @@ def record():
 
     record = [round(Gx,4),  round(Gy,4), round(Gz,4),  round(Ax,4), round(Ay,4), round(Az, 4)]
 
-    print (record)
     sleep(0.05)
     return record
 
@@ -114,10 +113,12 @@ if __name__ == '__main__':
     with open('./model/lightGBM.txt', 'rb') as f:
         models = pickle.load(f)
 
-    try:
-        while True:
-            total = 0
+    print ("Do")
+    print ()
 
+    try:
+        total = 0
+        while True:
             line = record()
 
             if isAllZero(line):
@@ -126,24 +127,30 @@ if __name__ == '__main__':
                 isError = True
                 ch = input()
 
-            bundle.append(line)
+            bundle.extend(line)
 
-            if total > 17:
+            if total > 16:
                 bundle.pop(0)
+                wrapper = []
+                wrapper.append(bundle)
+
                 predictions = []
 
                 for model in models:
-                    prediction = model.predict(bundle, num_iteration=model.best_iteration)
+                    prediction = model.predict(wrapper, num_iteration=model.best_iteration)
                     predictions.append(prediction)
+
                 predictions = np.mean(predictions, axis=0)
-                predictions = np.argmax(predictions, axis=1)
 
-                motion = get_motion_name(predictions)
-                print ("Motion Detect: ", motion)
-                print ()
+                result = np.argmax(predictions, axis=1)
 
+                if max(predictions[0]) > 0.9:
+                    motion = get_motion_name(result)
+                    print ("Motion Detect: ", motion, " |", round(max(predictions[0]), 4))
+                    print ()
+                    bundle = bundle[4:]
             else:
                 total += 1           
 
     except Exception as e:
-        print (e)
+        print ("Error:", e)
