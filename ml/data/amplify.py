@@ -103,10 +103,10 @@ if __name__ == '__main__':
 
                     # Save
                     new_name = DATASET_PATH + action + '/' + str(origin_cnt + amplify_cnt) + '.txt'
-                    '''
+                    
                     with open(new_name, 'wb') as f:
                         pickle.dump(new_data, f)
-                    '''
+                    
                     amplify_cnt += 1
 
                 # case 1: shift right, repeat 2 times
@@ -135,10 +135,10 @@ if __name__ == '__main__':
 
                     # Save
                     new_name = DATASET_PATH + action + '/' + str(origin_cnt + amplify_cnt) + '.txt'
-                    '''
+                    
                     with open(new_name, 'wb') as f:
                         pickle.dump(new_data, f)
-                    '''
+                    
                     amplify_cnt += 1
 
         print (action, "finished!")
