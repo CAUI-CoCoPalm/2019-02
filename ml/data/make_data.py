@@ -119,7 +119,7 @@ if __name__ == '__main__':
     MPU_Init()
     
     motion = get_motion_name()
-    result_path = './dataset/' + motion + '/'
+    result_path = '../dataset/' + motion + '/'
     isExistDir(result_path)
     isFileOpen = False
 
