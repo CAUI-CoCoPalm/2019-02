@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split, StratifiedKFold, KFold
 from sklearn.metrics import accuracy_score, confusion_matrix
 
-DATASET_PATH = './dataset/'
+DATASET_PATH = '../dataset/'
 actions = ['cClockwise', 'clockwise', 'left2right', 'right2left', 'up2down']
 
 for action in actions:
@@ -39,4 +39,4 @@ for action in actions:
     for i in range(data_num):
         df.loc[i] = data_dict[i]
 
-    df.to_csv('./dataset/{}.csv'.format(action), index=False)
+    df.to_csv('../dataset/{}.csv'.format(action), index=False)

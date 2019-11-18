@@ -6,7 +6,7 @@ import numpy as np
    
 if __name__ == '__main__':
     
-    result_path = './dataset/right2left/'
+    result_path = '../dataset/right2left/'
 
     files = os.listdir(result_path)
    
