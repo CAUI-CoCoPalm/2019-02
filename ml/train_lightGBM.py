@@ -41,7 +41,7 @@ def get_dataframes():
 def train_test_split(df):
     df = df.sample(frac=1)
     
-    train_num = int(len(df)*0.8)
+    train_num = int(len(df)*0.9)
 
     train_df = df[:train_num]
     test_df = df[train_num:]
@@ -81,7 +81,7 @@ def train_lightGBM(X, y):
         vl_x, vl_y = X.iloc[val_idx,:], y.iloc[val_idx]
 
         lgb_train, lgb_valid = lgb.Dataset(tr_x, tr_y), lgb.Dataset(vl_x, vl_y)
-        model = lgb.train(params, lgb_train, 1000, valid_sets=[lgb_train, lgb_valid], verbose_eval=100, early_stopping_rounds=20)
+        model = lgb.train(params, lgb_train, 250, valid_sets=[lgb_train, lgb_valid], verbose_eval=100, early_stopping_rounds=20)
         models.append(model)
         print('\n')
         del model, tr_x, tr_y, vl_x, vl_y, lgb_train, lgb_valid
