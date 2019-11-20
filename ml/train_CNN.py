@@ -89,9 +89,9 @@ if __name__ == '__main__':
     y_train = to_categorical(y_train)
     y_test = to_categorical(y_test)
 
-    batch_size = 128
+    batch_size = 32
     num_classes = 5
-    epochs = 30
+    epochs = 80
 
     model = Sequential()
     model.add(Conv2D(32, kernel_size=(5,5), strides=(1, 1), padding='same', input_shape = input_shape, activation='relu'))
