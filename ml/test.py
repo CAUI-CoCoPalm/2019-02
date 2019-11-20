@@ -59,6 +59,7 @@ if __name__ == '__main__':
     with open('./test/up2down.txt', 'rb') as f:
             tmp = np.asarray(pickle.load(f)).flatten()
             t.append(tmp.tolist())
+            '''
     with open('./test/right2left.txt', 'rb') as f:
             tmp = np.asarray(pickle.load(f)).flatten()
             t.append(tmp.tolist())
@@ -71,11 +72,11 @@ if __name__ == '__main__':
     with open('./test/cClock.txt', 'rb') as f:
             tmp = np.asarray(pickle.load(f)).flatten()
             t.append(tmp.tolist())
+            '''
 
     t = np.asarray(t)
     t = t.reshape(t.shape[0], 17, 6, 1)
 
     print (model.predict_classes(t))
-    matrix = model.predict_proba(t)
-    print (matrix)
-
+    matrix = model.predict_proba(t)[0]
+    print (np.argmax(matrix))

@@ -136,14 +136,13 @@ if __name__ == '__main__':
 
                 np_bundle = np.asarray(wrapper)
                 np_bundle = np_bundle.reshape(np_bundle.shape[0], 17, 6, 1)
-                model.predict_classes(t)
-'''
-                if max(predictions[0]) > 0.9:
-                    motion = get_motion_name(result)
-                    print ("Motion Detect: ", motion, " |", round(max(predictions[0]), 4))
-                    print ()
+                predict = model.predict_proba(t)
+
+                if max(predict[0]) > 0.9:
+                    motion = get_motion_name(np.argmax(predict[0]))
+                    print ("Motion Detect: ", motion, " |", round(max(predict[0]), 4))
                     bundle = bundle[4:]
-'''
+
             else:
                 total += 1           
 
