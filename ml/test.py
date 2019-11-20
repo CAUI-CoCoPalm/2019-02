@@ -76,3 +76,6 @@ if __name__ == '__main__':
     t = t.reshape(t.shape[0], 17, 6, 1)
 
     print (model.predict_classes(t))
+    matrix = model.predict_proba(t)
+    print (matrix)
+
