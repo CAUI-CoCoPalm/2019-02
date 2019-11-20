@@ -110,7 +110,7 @@ if __name__ == '__main__':
     MPU_Init()
     bundle = []
 
-    with open('./model/lightGBM.txt', 'rb') as f:
+    with open('./model/CNN.txt', 'rb') as f:
         models = pickle.load(f)
 
     print ("Do")
@@ -134,21 +134,15 @@ if __name__ == '__main__':
                 wrapper = []
                 wrapper.append(bundle)
 
-                predictions = []
+                np_bundle = np.asarray(wrapper)
+                np_bundle = np_bundle.reshape(np_bundle.shape[0], 17, 6, 1)
+                predict = model.predict_proba(t)
 
-                for model in models:
-                    prediction = model.predict(wrapper, num_iteration=model.best_iteration)
-                    predictions.append(prediction)
-
-                predictions = np.mean(predictions, axis=0)
-
-                result = np.argmax(predictions, axis=1)
-
-                if max(predictions[0]) > 0.9:
-                    motion = get_motion_name(result)
-                    print ("Motion Detect: ", motion, " |", round(max(predictions[0]), 4))
-                    print ()
+                if max(predict[0]) > 0.9:
+                    motion = get_motion_name(np.argmax(predict[0]))
+                    print ("Motion Detect: ", motion, " |", round(max(predict[0]), 4))
                     bundle = bundle[4:]
+
             else:
                 total += 1           
 

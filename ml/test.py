@@ -45,14 +45,10 @@ def test_lightGBM(t, models):
     print ("Motion Detect: ", result,  "\n", predictions)
     print ()
 
-def test_random_forest(t, model):
-    result = model.predict(t)
-    print (result)
-
 if __name__ == '__main__':
     bundle = []
 
-    with open('./model/Random_Forest.txt', 'rb') as f:
+    with open('./model/CNN.txt', 'rb') as f:
         model = pickle.load(f)
 
     print ("Do")
@@ -63,6 +59,7 @@ if __name__ == '__main__':
     with open('./test/up2down.txt', 'rb') as f:
             tmp = np.asarray(pickle.load(f)).flatten()
             t.append(tmp.tolist())
+            '''
     with open('./test/right2left.txt', 'rb') as f:
             tmp = np.asarray(pickle.load(f)).flatten()
             t.append(tmp.tolist())
@@ -75,5 +72,11 @@ if __name__ == '__main__':
     with open('./test/cClock.txt', 'rb') as f:
             tmp = np.asarray(pickle.load(f)).flatten()
             t.append(tmp.tolist())
+            '''
 
-    test_random_forest(t, model)
+    t = np.asarray(t)
+    t = t.reshape(t.shape[0], 17, 6, 1)
+
+    print (model.predict_classes(t))
+    matrix = model.predict_proba(t)[0]
+    print (np.argmax(matrix))
