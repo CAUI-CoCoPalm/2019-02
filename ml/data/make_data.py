@@ -84,7 +84,7 @@ def record():
 
 def get_motion_name():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-i', type=int,help="0: up2down, 1: right2left, 2: left2right, 3: clockwise, 4: cClockwise", choices=[0,1,2,3,4], metavar='Motion_id', required=True) 
+    parser.add_argument('-i', type=int,help="0: up2down, 1: right2left, 2: left2right, 3: clockwise, 4: cClockwise 5: Neutral", choices=[0,1,2,3,4,5], metavar='Motion_id', required=True) 
     
     args = parser.parse_args()
 
@@ -101,6 +101,8 @@ def get_motion_name():
         motion = 'clockwise'
     elif m_id == 4:
         motion = 'cClockwise'
+    elif m_id == 5:
+        motion = 'neutral'
 
     return motion
 
