@@ -2,7 +2,7 @@ import os
 import pickle
 import operator
 import numpy as np
-from random import uniform, randint
+from random import gauss, randint
 
 def make_empty_list(val=0.0):
     empty = list()
@@ -17,7 +17,7 @@ def make_noise_list(t=0.08):
     empty = list()
 
     for line in range(17):
-        r = [uniform(-t, t), uniform(-t, t), uniform(-t, t), uniform(-t, t), uniform(-t, t), uniform(-t, t)]
+        r = [gauss(-t, t), gauss(-t, t), gauss(-t, t), gauss(-t, t), gauss(-t, t), gauss(-t, t)]
         empty.append(r)
 
     return empty
