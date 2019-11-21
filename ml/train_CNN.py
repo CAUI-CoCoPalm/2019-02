@@ -17,31 +17,35 @@ import pickle
 np.random.seed(2990)
 
 def get_dataframes():
-    df1 = pd.read_csv('./dataset/cClockwise.csv')
-    df2 = pd.read_csv('./dataset/clockwise.csv')
-    df3 = pd.read_csv('./dataset/left2right.csv')
-    df4 = pd.read_csv('./dataset/right2left.csv')
-    df5 = pd.read_csv('./dataset/up2down.csv')
+    df1 = pd.read_csv('./dataset/cClockwise_origin.csv')
+    df2 = pd.read_csv('./dataset/clockwise_origin.csv')
+    df3 = pd.read_csv('./dataset/left2right_origin.csv')
+    df4 = pd.read_csv('./dataset/right2left_origin.csv')
+    df5 = pd.read_csv('./dataset/up2down_origin.csv')
+    df6 = pd.read_csv('./dataset/neutral_origin.csv')
 
     df1['target'] = 4 # 반시계
     df2['target'] = 3 # 시계
     df3['target'] = 2 # 왼오
     df4['target'] = 1 # 오왼
     df5['target'] = 0 # 업다운
+    df6['target'] = 5 # 중립
 
-    data_num = len(df1) + len(df2) + len(df3) + len(df4) + len(df5)
+    data_num = len(df1) + len(df2) + len(df3) + len(df4) + len(df5) + len(df6)
 
     df = pd.DataFrame(columns=range(102), index=range(data_num))
     df = pd.concat([df1, df2], axis=0)
     df = pd.concat([df, df3], axis=0)
     df = pd.concat([df, df4], axis=0)
     df = pd.concat([df, df5], axis=0)
+    df = pd.concat([df, df6], axis=0)
 
     df.append(df1)
     df.append(df2)
     df.append(df3)
     df.append(df4)
     df.append(df5)
+    df.append(df6)
 
     return df
 
@@ -90,8 +94,8 @@ if __name__ == '__main__':
     y_test = to_categorical(y_test)
 
     batch_size = 32
-    num_classes = 5
-    epochs = 80
+    num_classes = 6
+    epochs = 70
 
     model = Sequential()
     model.add(Conv2D(32, kernel_size=(5,5), strides=(1, 1), padding='same', input_shape = input_shape, activation='relu'))

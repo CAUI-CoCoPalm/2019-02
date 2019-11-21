@@ -7,6 +7,7 @@ import os
 import numpy as np
 import pandas as pd
 from socket import *
+#tset
 
 #some MPU6050 Registers and their Address
 PWR_MGMT_1   = 0x6B
