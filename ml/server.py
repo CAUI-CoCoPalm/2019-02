@@ -74,8 +74,8 @@ if __name__ == '__main__':
                     motion = get_motion_name(np.argmax(pred[0]))
                     print ("Motion Detect: ", motion, " |", round(max(pred[0]), 4))
                     print ()
-                    bundle = bundle[4:]
-                    total -= 4
+                    sleep (0.5)
+                    bundle.clear()
 
             else:
                 total += 1
