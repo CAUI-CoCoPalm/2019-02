@@ -17,12 +17,12 @@ import pickle
 np.random.seed(2990)
 
 def get_dataframes():
-    df1 = pd.read_csv('./dataset/cClockwise_origin.csv')
-    df2 = pd.read_csv('./dataset/clockwise_origin.csv')
-    df3 = pd.read_csv('./dataset/left2right_origin.csv')
-    df4 = pd.read_csv('./dataset/right2left_origin.csv')
-    df5 = pd.read_csv('./dataset/up2down_origin.csv')
-    df6 = pd.read_csv('./dataset/neutral_origin.csv')
+    df1 = pd.read_csv('./dataset/cClockwise.csv')
+    df2 = pd.read_csv('./dataset/clockwise.csv')
+    df3 = pd.read_csv('./dataset/left2right.csv')
+    df4 = pd.read_csv('./dataset/right2left.csv')
+    df5 = pd.read_csv('./dataset/up2down.csv')
+    df6 = pd.read_csv('./dataset/neutral.csv')
 
     df1['target'] = 4 # 반시계
     df2['target'] = 3 # 시계

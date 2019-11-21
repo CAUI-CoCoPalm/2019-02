@@ -34,7 +34,7 @@ def isAllZero(line):
 if __name__ == '__main__':
     bundle = []
 
-    with open('./model/CNN_neutral_70e_32b.txt', 'rb') as f:
+    with open('./model/CNN_partly.txt', 'rb') as f:
         model = pickle.load(f)
 
     print ("Do")
