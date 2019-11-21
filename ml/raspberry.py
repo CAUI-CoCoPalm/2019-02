@@ -119,4 +119,5 @@ if __name__ == '__main__':
 
     except Exception as e:
         print ("Error:", e)
-        cSock.sendto('IO_Error'.encode(), (serverName, serverPort))
+        error_list = ['IO']
+        cSock.sendto(pickle.dumps(error_list), (serverName, serverPort))
