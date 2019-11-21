@@ -103,16 +103,15 @@ def get_motion_name(m_id):
 if __name__ == '__main__':
     MPU_Init()
     
-    try:
-        serverName = '192.168.0.2'
-        serverPort = 32990
+    serverName = '192.168.0.2'
+    serverPort = 32990
 
-        cSock = socket(AF_INET, SOCK_DGRAM)
-        cSock.settimeout(2)
+    cSock = socket(AF_INET, SOCK_DGRAM)
+    cSock.settimeout(2)
         
-        print ("Client is running on port", cSock.getsockname()[1])
+    print ("Client is running on port", cSock.getsockname()[1])
 
-        total = 0
+    try:
         while True:
             line = record()
             cSock.sendto(pickle.dumps(line), (serverName, serverPort))
@@ -120,3 +119,5 @@ if __name__ == '__main__':
 
     except Exception as e:
         print ("Error:", e)
+        error_list = ['IO']
+        cSock.sendto(pickle.dumps(error_list), (serverName, serverPort))

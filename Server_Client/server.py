@@ -34,7 +34,7 @@ def isAllZero(line):
 if __name__ == '__main__':
     bundle = []
 
-    with open('./model/CNN_partly.txt', 'rb') as f:
+    with open('./model/CNN.txt', 'rb') as f:
         model = pickle.load(f)
 
     print ("Do")
@@ -56,8 +56,12 @@ if __name__ == '__main__':
 
             line = pickle.loads(msg)
 
+            if line[0] == 'IO':
+                print ("I/O Error! Check Again!")
+                continue
             if isAllZero(line):
                 print ("Line Error! Check Again!")
+                continue
 
             bundle.append(line)
 
@@ -74,8 +78,8 @@ if __name__ == '__main__':
                     motion = get_motion_name(np.argmax(pred[0]))
                     print ("Motion Detect: ", motion, " |", round(max(pred[0]), 4))
                     print ()
-                    bundle = bundle[4:]
-                    total -= 4
+                    bundle.clear()
+                    total = 0
 
             else:
                 total += 1
