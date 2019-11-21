@@ -5,8 +5,8 @@ import argparse
 import pickle
 import os
 import numpy as np
-import lightgbm as lgb
 import pandas as pd
+from socket import *
 
 #some MPU6050 Registers and their Address
 PWR_MGMT_1   = 0x6B
@@ -79,7 +79,7 @@ def record():
     Gy = gyro_y/131.0
     Gz = gyro_z/131.0
 
-    record = [round(Gx,4),  round(Gy,4), round(Gz,4),  round(Ax,4), round(Ay,4), round(Az, 4)]
+    record = [round(Gx,4), round(Gy,4), round(Gz,4),round(Ax,4), round(Ay,4), round(Az, 4)]
 
     sleep(0.05)
     return record
@@ -98,54 +98,25 @@ def get_motion_name(m_id):
         motion = 'cClockwise'
 
     return motion
-
-def isAllZero(line):
-    for element in line:
-        if float(element) != 0.0:
-            return False
-
-    return True
     
 if __name__ == '__main__':
     MPU_Init()
-    bundle = []
-
-    with open('./model/CNN.txt', 'rb') as f:
-        models = pickle.load(f)
-
-    print ("Do")
-    print ()
-
+    
     try:
+        serverName = '192.168.0.2'
+        serverPort = 32990
+
+        cSock = socket(AF_INET, SOCK_DGRAM)
+        cSock.settimeout(2)
+        
+        print ("Client is running on port", cSock.getsockname()[1])
+
         total = 0
         while True:
             line = record()
+            cSock.sendto(pickle.dumps(line), (serverName, serverPort))
+            sleep(0.05)
 
-            if isAllZero(line):
-                print ("Line Error! Check Again!")
-                print ("Press any key to continue")
-                isError = True
-                ch = input()
-
-            bundle.extend(line)
-
-            if total > 16:
-                bundle.pop(0)
-                wrapper = []
-                wrapper.append(bundle)
-
-                np_bundle = np.asarray(wrapper)
-                np_bundle = np_bundle.reshape(np_bundle.shape[0], 17, 6, 1)
-                model.predict_classes(t)
-'''
-                if max(predictions[0]) > 0.9:
-                    motion = get_motion_name(result)
-                    print ("Motion Detect: ", motion, " |", round(max(predictions[0]), 4))
-                    print ()
-                    bundle = bundle[4:]
-'''
-            else:
-                total += 1           
 
     except Exception as e:
         print ("Error:", e)
