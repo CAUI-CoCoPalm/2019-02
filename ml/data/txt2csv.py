@@ -10,7 +10,8 @@ from sklearn.model_selection import train_test_split, StratifiedKFold, KFold
 from sklearn.metrics import accuracy_score, confusion_matrix
 
 DATASET_PATH = '../dataset/'
-actions = ['cClockwise', 'clockwise', 'left2right', 'right2left', 'up2down']
+#actions = ['cClockwise', 'clockwise', 'left2right', 'right2left', 'up2down']
+actions = ['neutral']
 
 for action in actions:
     all_data = []
