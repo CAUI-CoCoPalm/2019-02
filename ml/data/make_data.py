@@ -4,6 +4,7 @@ from datetime import datetime
 import argparse
 import pickle
 import os
+import sys
 
 #some MPU6050 Registers and their Address
 PWR_MGMT_1   = 0x6B
@@ -148,17 +149,16 @@ if __name__ == '__main__':
                     bundle.append(line)
                     total += 1
 
-                f_name = result_path + str(cnt) + '.txt'
+                    f_name = result_path + str(cnt) + '.txt'
 
-                if not isError:
-                    isFileOpen = True
-                    with open(f_name, 'wb') as f:
-                        pickle.dump(bundle, f)
-                    isFileOpen = False
-                    print (f_name + " saved!!")
-                    print ()
+                    if not isError:
+                        isFileOpen = True
+                        with open(f_name, 'wb') as f:
+                            pickle.dump(bundle, f)
+                        isFileOpen = False
+                        print (f_name + " saved!!")
+                        print ()
                 
-
             elif('r' == c):
                 cnt = len(os.listdir(result_path))
                 print ("Current data in", str(result_path), ": ", cnt)
@@ -167,7 +167,6 @@ if __name__ == '__main__':
                 break
 
             cnt += 1
-
     except Exception as e:
         print (e)
 
