@@ -1,10 +1,10 @@
-from datetime import datetime
 import argparse
 import pickle
 import os
 import numpy as np
 import pandas as pd
-from time import sleep
+import threading
+from time import sleep, time
 from socket import *
 
 def get_motion_name(m_id):
@@ -30,6 +30,17 @@ def isAllZero(line):
             return False
 
     return True
+
+def android_send(conn, msg):
+    msg = conn.recv(2048)
+
+    if not data:
+        print ("Android disconnect!")
+        conn.close()
+        return False
+    
+    conn.send(motion.encode())
+    return True
     
 if __name__ == '__main__':
     bundle = []
@@ -44,7 +55,17 @@ if __name__ == '__main__':
         serverPort = 32990
         serverSocket = socket(AF_INET, SOCK_DGRAM)
         serverSocket.bind(('', serverPort))
-        print ("Ready to Recive")
+        print ("Ready to Recive from Raspberry pi")
+
+        androidPort = 22990
+        androidSocket = socket(AF_INET, SOCK_DGRAM)
+        androidSocket.bind(('', androidPort))
+        print ("Ready to Recive from Android")
+
+
+        isStart = False
+        startTime = 0
+        endTime = 0
 
         total = 0
         while True:
@@ -76,8 +97,18 @@ if __name__ == '__main__':
 
                 if max(pred[0]) > 0.9:
                     motion = get_motion_name(np.argmax(pred[0]))
-                    print ("Motion Detect: ", motion, " |", round(max(pred[0]), 4))
-                    print ()
+                    if motion == 'up2down':
+                        isStart = True
+                        startTime = time()
+                    if isStart == True:
+                        endTime = time()
+                        if endTime - startTime > 2:
+                            isStart = False
+                    if motion != 'up2down' and motion != 'neutral' and isStart == True:
+                        android = androidSocket.accept()
+                        threading.Thread(target=android_send, args=motion)
+                        startTime = time()
+
                     bundle.clear()
                     total = 0
 
@@ -86,3 +117,7 @@ if __name__ == '__main__':
 
     except Exception as e:
         print ("Error:", e)
+
+    finally:
+        serverSocket.close()
+        androidSocket.close()
