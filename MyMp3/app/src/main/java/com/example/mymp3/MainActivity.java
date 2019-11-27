@@ -108,22 +108,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    void checkPermission(){
-        ArrayList<String> permissions = new ArrayList<String>();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_ADMIN) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.BLUETOOTH_ADMIN);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
-            permissions.add(Manifest.permission.BLUETOOTH);
-        }
-
-        if(permissions.size() > 0) {
-            String[] reqPermissionArray = new String[permissions.size()];
-            reqPermissionArray = permissions.toArray(reqPermissionArray);
-            ActivityCompat.requestPermissions(this, reqPermissionArray, REQUEST_ENABLE_BT);
-        }
-    }
-
    private void update() {
         if (isPlay) {
             play.setBackground(getResources().getDrawable(R.drawable.pause));
