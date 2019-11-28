@@ -1,37 +1,19 @@
 package com.example.mymp3;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import android.Manifest;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         play = findViewById(R.id.Play);
         prev = findViewById(R.id.Prev);
         next = findViewById(R.id.Next);
+
+        Context context = getApplicationContext();
 
         mediaPlayer = MediaPlayer.create(MainActivity.this, songID[songIdx]);
         mediaPlayer.start();
@@ -106,6 +90,41 @@ public class MainActivity extends AppCompatActivity {
                 volDown();
             }
         });
+
+        Handler mHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message inputMessage) {
+                switch(inputMessage.what) {
+
+                    // CONNECTED == 0 / DATA == 1 / DISCONNECTED == 3
+                    case 0:
+                        // do something with UI
+                        Log.d("connected!", "connected with server!");
+                        break;
+
+                    case 1:
+                        String msg = (String) inputMessage.obj;
+                        Log.d("socket", "Socket Data Receive !!");
+
+                        if (msg.equals("r2l")){
+                            prevSong();
+                        }
+                        else if (msg.equals("l2r")){
+                            nextSong();
+                        }
+                        else if (msg.equals("cw")){
+                            volUp();
+                        }
+                        else if (msg.equals("ccw")){
+                            volDown();
+                        }
+                        break;
+                }
+            }
+        };
+
+        ClientSocket socket = new ClientSocket("192.168.4.5", 32990, mHandler, context);
+        socket.start();
     }
 
    private void update() {
