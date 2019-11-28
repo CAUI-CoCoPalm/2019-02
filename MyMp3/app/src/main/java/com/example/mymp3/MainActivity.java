@@ -3,6 +3,7 @@ package com.example.mymp3;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private int[] songThumbnail = new int[]{R.drawable.nam, R.drawable._2002, R.drawable.speechless, R.drawable.punch, R.drawable.workaholic};
     private boolean isPlay = true;
     private int songIdx = 0;
+
+    private TcpClient mTcpClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,40 +94,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Handler mHandler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(Message inputMessage) {
-                switch(inputMessage.what) {
+        new ConnectTask().execute("");
 
-                    // CONNECTED == 0 / DATA == 1 / DISCONNECTED == 3
-                    case 0:
-                        // do something with UI
-                        Log.d("connected!", "connected with server!");
-                        break;
-
-                    case 1:
-                        String msg = (String) inputMessage.obj;
-                        Log.d("socket", "Socket Data Receive !!");
-
-                        if (msg.equals("r2l")){
-                            prevSong();
-                        }
-                        else if (msg.equals("l2r")){
-                            nextSong();
-                        }
-                        else if (msg.equals("cw")){
-                            volUp();
-                        }
-                        else if (msg.equals("ccw")){
-                            volDown();
-                        }
-                        break;
-                }
-            }
-        };
-
-        ClientSocket socket = new ClientSocket("192.168.4.5", 22990, mHandler, context);
-        socket.start();
+        //sends the message to the server
+        if (mTcpClient != null) {
+            mTcpClient.sendMessage("hi");
+        }
     }
 
    private void update() {
@@ -199,6 +174,45 @@ public class MainActivity extends AppCompatActivity {
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
+        }
+
+        if (mTcpClient != null) {
+            mTcpClient.stopClient();
+        }
+
+    }
+
+    public class ConnectTask extends AsyncTask<String, String, TcpClient> {
+
+        @Override
+        protected TcpClient doInBackground(String... message) {
+
+            //we create a TCPClient object
+            mTcpClient = new TcpClient(new TcpClient.OnMessageReceived() {
+                @Override
+                //here the messageReceived method is implemented
+                public void messageReceived(String message) {
+                    //this method calls the onProgressUpdate
+                    publishProgress(message);
+                }
+            });
+            mTcpClient.run();
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            if (values[0].equals("r2l")){
+                prevSong();
+            }
+            else if (values[0].equals("l2r")){
+                nextSong();
+            }
+            Log.d("test", "response " + values[0]);
+            //process server response here....
+
         }
     }
 }
