@@ -8,6 +8,7 @@ from time import sleep, time
 from socket import *
 
 flag = -1
+islive = True
 
 def get_motion_name(m_id):
 
@@ -33,31 +34,43 @@ def isAllZero(line):
 
     return True
 
-def android_send(socket):
-    conn = socket.accpet()
-    while True:
-        msg = conn.recv(2048)
+def android_send():
 
-        if not data:
-            print ("Android disconnect!")
-            conn.close()
-            return False
+    androidPort = 22990
+    androidSocket = socket(AF_INET, SOCK_STREAM)
+    androidSocket.bind(('', androidPort))
+    print ("Ready to Recive from Android")
 
-        if flag == 1:
-            conn.send('r2l')
-            print ("right 2 left send!")
-        elif flag == 2:
-            conn.send('l2r')
-            print ("left 2 right send!")
-        elif flag == 3:
-            conn.send('cw')
-            print ("Clockwise send!")
-        elif flag == 4:
-            conn.send('ccw')
-            print ("CClockwise send!")
-        flag = -1
-    
-    conn.send(motion.encode())
+    global flag
+    global islive
+
+    androidSocket.listen(3)
+    while islive:
+        conn, addr = androidSocket.accept()
+        print ("connected from android")
+
+        while True:
+            msg = conn.recv(2048)
+
+            if not msg:
+                print ('android disconnnect!')
+                break
+
+            if flag == 1:
+                conn.send(bytes('r2l\n', 'UTF-8'))
+                print ("Previous Song\n")
+            elif flag == 2:
+                conn.send(bytes('l2r\n', 'UTF-8'))
+                print ("Next Song\n")
+            elif flag == 3:
+                conn.send(bytes('cw\n', 'UTF-8'))
+                print ("Vol Up\n")
+            elif flag == 4:
+                conn.send(bytes('ccw\n', 'UTF-8'))
+                print ("Vol down\n")
+            flag = -1
+        conn.close()
+    androidSocket.close()
     
 if __name__ == '__main__':
     bundle = []
@@ -74,12 +87,9 @@ if __name__ == '__main__':
         serverSocket.bind(('', serverPort))
         print ("Ready to Recive from Raspberry pi")
 
-        androidPort = 22990
-        androidSocket = socket(AF_INET, SOCK_DGRAM)
-        androidSocket.bind(('', androidPort))
-        print ("Ready to Recive from Android")
+        and_thread = threading.Thread(target=android_send)
 
-        threading.Thread(target=android_send, daemon = True, args=androidSocket)
+        and_thread.start()
 
         isStart = False
         startTime = 0
@@ -115,14 +125,16 @@ if __name__ == '__main__':
 
                 if max(pred[0]) > 0.9:
                     motion = get_motion_name(np.argmax(pred[0]))
+                    print (motion, "| ", max(pred[0]))
                     if motion == 'up2down':
                         isStart = True
                         startTime = time()
                     if isStart == True:
                         endTime = time()
-                        if endTime - startTime > 2:
+                        if endTime - startTime > 5:
                             isStart = False
                     if motion != 'up2down' and motion != 'neutral' and isStart == True:
+                        print ("motion send: ", motion)
                         if motion == 'right2left':
                             flag = 1
                         elif motion == 'left2right':
@@ -132,6 +144,7 @@ if __name__ == '__main__':
                         elif motion == 'cClockwise':
                             flag = 4
                         startTime = time()
+                        print ()
 
                     bundle.clear()
                     total = 0
@@ -143,5 +156,5 @@ if __name__ == '__main__':
         print ("Error:", e)
 
     finally:
+        islive = False
         serverSocket.close()
-        androidSocket.close()
