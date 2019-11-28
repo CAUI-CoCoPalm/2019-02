@@ -75,7 +75,7 @@ if __name__ == '__main__':
         androidSocket.bind(('', androidPort))
         print ("Ready to Recive from Android")
 
-        threading.Thread(target=android_send, daemon = True)
+        threading.Thread(target=android_send, daemon = True, args=androidSocket)
 
         isStart = False
         startTime = 0
