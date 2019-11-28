@@ -7,6 +7,8 @@ import threading
 from time import sleep, time
 from socket import *
 
+flag = -1
+
 def get_motion_name(m_id):
 
     if m_id == 0:
@@ -31,16 +33,27 @@ def isAllZero(line):
 
     return True
 
-def android_send(conn, msg):
-    msg = conn.recv(2048)
+def android_send(socket):
+    conn = socket.accpet()
+    while True:
+        msg = conn.recv(2048)
 
-    if not data:
-        print ("Android disconnect!")
-        conn.close()
-        return False
+        if not data:
+            print ("Android disconnect!")
+            conn.close()
+            return False
+
+        if flag == 1:
+            conn.send('r2l')
+        elif flag == 2:
+            conn.send('l2r')
+        elif flag == 3:
+            conn.send('cw')
+        elif flag == 4:
+            conn.send('ccw')
+        flag = -1
     
     conn.send(motion.encode())
-    return True
     
 if __name__ == '__main__':
     bundle = []
@@ -62,6 +75,7 @@ if __name__ == '__main__':
         androidSocket.bind(('', androidPort))
         print ("Ready to Recive from Android")
 
+        threading.Thread(target=android_send, daemon = True)
 
         isStart = False
         startTime = 0
@@ -105,8 +119,14 @@ if __name__ == '__main__':
                         if endTime - startTime > 2:
                             isStart = False
                     if motion != 'up2down' and motion != 'neutral' and isStart == True:
-                        android = androidSocket.accept()
-                        threading.Thread(target=android_send, args=motion)
+                        if motion == 'right2left':
+                            flag = 1
+                        elif motion == 'left2right':
+                            flag = 2
+                        elif motion == 'clockwise':
+                            flag = 3
+                        elif motion == 'cClockwise':
+                            flag = 4
                         startTime = time()
 
                     bundle.clear()
