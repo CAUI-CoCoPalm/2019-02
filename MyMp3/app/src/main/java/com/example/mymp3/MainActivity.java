@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        ClientSocket socket = new ClientSocket("192.168.4.5", 32990, mHandler, context);
+        ClientSocket socket = new ClientSocket("192.168.4.5", 22990, mHandler, context);
         socket.start();
     }
 
