@@ -103,7 +103,7 @@ def get_motion_name(m_id):
 if __name__ == '__main__':
     MPU_Init()
     
-    serverName = '192.168.0.2'
+    serverName = '192.168.4.1'
     serverPort = 32990
 
     cSock = socket(AF_INET, SOCK_DGRAM)
