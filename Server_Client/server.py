@@ -45,12 +45,16 @@ def android_send(socket):
 
         if flag == 1:
             conn.send('r2l')
+            print ("right 2 left send!")
         elif flag == 2:
             conn.send('l2r')
+            print ("left 2 right send!")
         elif flag == 3:
             conn.send('cw')
+            print ("Clockwise send!")
         elif flag == 4:
             conn.send('ccw')
+            print ("CClockwise send!")
         flag = -1
     
     conn.send(motion.encode())
