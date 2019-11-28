@@ -210,6 +210,12 @@ public class MainActivity extends AppCompatActivity {
             else if (values[0].equals("l2r")){
                 nextSong();
             }
+            else if (values[0].equals("cw")){
+                volUp();
+            }
+            else if(values[0].equals("ccw")){
+                volDown();
+            }
             Log.d("test", "response " + values[0]);
             //process server response here....
 
