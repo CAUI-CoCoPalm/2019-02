@@ -3,7 +3,7 @@
 ## 1. Train.py
 
 ### 1) 실행법
-''' python3 train.py -i 0 '''
+``` python3 train.py -i 0 ```
 
 ### 2) 옵션
 0: up2down (위에서 아래)<br>
