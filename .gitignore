@@ -1,3 +1,6 @@
 */*.csv
 *.swp
 */*.swp
+dataset
+
+!/dataset/decode.py
